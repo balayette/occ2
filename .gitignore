@@ -1,0 +1,7 @@
+_build/
+*.cmx
+*.cmo
+*.cmi
+*.swp
+.merlin
+

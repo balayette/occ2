@@ -40,26 +40,24 @@ let error lexbuf fmt =
 let digit = ['0'-'9']
 let alpha = ['a'-'z' 'A'-'Z']
 
-    rule token = parse
-          | ' '+ { token lexbuf }
-          | '\n' { Lexing.new_line lexbuf; token lexbuf }
-          | digit+ { INT_LITERAL(Lexing.lexeme lexbuf |> int_of_string) }
-          | alpha(alpha | digit)* { IDENTIFIER(Lexing.lexeme lexbuf) }
-          | '(' { LPARENT }
-          | ')' { RPARENT }
-          | '{' { LBRACE }
-          | '}' { RBRACE }
-          | ';' { SEMICOLON }
-          | "return" { RETURN }
-          | eof { EOF }
-          | _ { error lexbuf "UNKNOWN CHAR" }
-
-
-              {
-                let lex input = 
-                  let lexbuf = Lexing.from_string input in
-                  let rec aux = function
-                      EOF -> [EOF]
-                    | tok -> tok::(aux (token lexbuf))
-                  in aux (token lexbuf)
-              }
+rule token = parse
+      | ' '+ { token lexbuf }
+      | '\n' { Lexing.new_line lexbuf; token lexbuf }
+      | digit+ { INT_LITERAL(Lexing.lexeme lexbuf |> int_of_string) }
+      | alpha(alpha | digit)* { IDENTIFIER(Lexing.lexeme lexbuf) }
+      | '(' { LPARENT }
+      | ')' { RPARENT }
+      | '{' { LBRACE }
+      | '}' { RBRACE }
+      | ';' { SEMICOLON }
+      | "return" { RETURN }
+      | eof { EOF }
+      | _ { error lexbuf "UNKNOWN CHAR" }
+          {
+            let lex input = 
+              let lexbuf = Lexing.from_string input in
+              let rec aux = function
+                  EOF -> [EOF]
+                | tok -> tok::(aux (token lexbuf))
+              in aux (token lexbuf)
+          }
